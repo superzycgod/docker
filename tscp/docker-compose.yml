@@ -1,0 +1,56 @@
+version: '2.1'
+
+services:
+  tscp-mysql:
+    container_name: tscp-mysql
+    image: tscp-mysql:0.0.1
+    build: ./mysql
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=tscp_devdb
+      - MYSQL_USER=tscp_dev
+      - MYSQL_PASSWORD=tscp_dev
+  tscp-redis:
+    container_name: tscp-redis
+    image: tscp-redis:0.0.1
+    build: ./redis
+    ports:
+      - 6379:6379
+  tscp-tomcat-8030:
+    container_name: tscp-tomcat-8030
+    labels:
+      - 注册中心和配置中心
+    image: tscp-tomcat:0.0.1
+    build: ./tomcat
+    ports:
+      - 8030:8080
+    environment:
+      - JAVA_OPTS=-Xms200m -Xmx200m -DeurekaIp=http://tscp-tomcat-8030:8080/cloud-eureka/eureka/ -Dserver.port=8080
+  tscp-tomcat-8020:
+    container_name: tscp-tomcat-8020
+    labels:
+      - zuul网关
+    image: tscp-tomcat:0.0.1
+    build: ./tomcat
+    ports:
+      - 8020:8080
+    environment:
+      - JAVA_OPTS=-Xms200m -Xmx200m -DeurekaIp=http://tscp-tomcat-8030:8080/cloud-eureka/eureka/ -Dserver.port=8080
+    depends_on:
+      - tscp-tomcat-8030
+  tscp-tomcat-8040:
+    container_name: tscp-tomcat-8040
+    labels:
+      - 业务系统
+    image: tscp-tomcat:0.0.1
+    build: ./tomcat
+    ports:
+      - 8040:8080
+    environment:
+      - JAVA_OPTS=-Xms2g -Xmx2g -DeurekaIp=http://tscp-tomcat-8030:8080/cloud-eureka/eureka/ -Dserver.port=8080 -DptId=zyccons
+    depends_on:
+      - tscp-tomcat-8030
+      - tscp-redis
+      - tscp-mysql

@@ -1,0 +1,85 @@
+[mysql]
+# 设置mysql客户端默认字符集
+default-character-set=utf8 
+[mysqld]
+# 不区分大小写
+lower_case_table_names=1
+# 忽略用户密码登录
+# skip-grant-tables
+# 设置3306端口
+port = 3306 
+# 允许最大连接数
+max_connections = 800
+# 服务端使用的字符集默认为8比特编码的latin1字符集
+character-set-server = utf8
+# 创建新表时将使用的默认存储引擎
+default-storage-engine = INNODB  
+################################## ！！基础配置，不允许更改！！ ##################################
+
+################################## 常用配置Start ##################################
+# 设置密码自动失效的时间，0为永不失效
+default_password_lifetime = 0  
+
+# 扩增group_concat函数，可拼接的最大长度（待优化）
+group_concat_max_len = 102400
+# 允许接收的数据包大小（默认是4M）
+max_allowed_packet = 64M
+
+# 开启日志
+# 默认日志时间慢8小时（默认为UTC）
+log_timestamps = SYSTEM
+#log_error = /var/log/mysqld.log
+
+# 开启慢查询日志
+#slow_query_log = ON
+# slow_query_log_file = /var/log/slow_query_log_file.log
+#long_query_time = 2
+# 记录下没有使用索引的查询
+#log_queries_not_using_indexes = 1
+
+################################## 常用配置End ##################################
+
+################################## 性能优化Start ##################################
+# 非交互式客户端的空闲超时，单位秒（默认8小时）
+wait_timeout = 1800
+# 交互式的客户端的空闲超时，单位秒（默认8小时）
+interactive_timeout = 1800
+
+# 读入缓冲区的大小
+read_buffer_size = 16M
+# 随机读缓冲区大小
+read_rnd_buffer_size = 32M
+# 顺序读缓冲区大小
+sort_buffer_size = 32M
+
+# 减少参与join的“被驱动表”的读取次数以提高性能
+# 先将join buffer中的结果与需求join的表进行操作，然后清空join buffer中的数据，继续将剩余的结果集写入次buffer中
+join_buffer_size = 128M
+tmp_table_size = 64M
+
+# 事务隔离级别，MySQL默认为REPEATABLE-READ，它利用自身独有的Gap Lock解决了"幻读"。REPEATABLE-READ的事务并发插入性能受到很大的限制。
+transaction_isolation = READ-COMMITTED
+
+# InnoDB缓冲池大小，它决定了MySQL可以在内存中缓存多少数据和索引，而不是每次都从磁盘上读取。
+# 一般设置为操作系统内存的75%左右
+#innodb_buffer_pool_size = 6G
+
+# InnoDB缓冲池实例个数，InnoDB缓冲池是通过一整个链表的方式来管理页面（段、簇、页）的。
+# 如果缓冲池比较大（8G以上），可以按照innodb_buffer_pool_size / innodb_buffer_pool_instances = 1G进行设置
+innodb_buffer_pool_instances = 8
+
+# InnoDB日志文件大小（Redo Log），它将事务对InnoDB表的修改记录保存在ib_logfile0、ib_logfile1中。
+innodb_log_file_size = 600M
+
+# InnoDB事务日志刷盘时机，当1时，事务提交到日志缓冲区，Master线程同步将缓冲区的日志直接写入物理日志文件
+# 安全1 > 2 > 0，速度0 > 2 > 1，根据实际业务需求（安全与速度权衡）选择合理的刷盘时机。
+innodb_flush_log_at_trx_commit=1
+
+# InnoDB独立表空间，innodb_file_per_table = ON表示每张表在独立的物理文件中（.ibd）存储数据和索引
+# 如果通过drop/truncate table操作，独立表空间的物理存储会立即被回收（删除/初始化），而共享表空间不会被回收且只会一直增大。
+innodb_file_per_table = ON
+
+# 在启动时把热数据加载到内存
+innodb_buffer_pool_load_at_startup = 1
+# 在关闭时把热数据dump到本地磁盘
+innodb_buffer_pool_dump_at_shutdown = 1
