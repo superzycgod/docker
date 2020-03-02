@@ -7,6 +7,8 @@ services:
     build: ./mysql
     ports:
       - 3306:3306
+    volumes: 
+      - /etc/localtime:/etc/localtime:ro
     environment:
       - MYSQL_ROOT_PASSWORD=123456
       - MYSQL_DATABASE=tscp_devdb
@@ -18,6 +20,8 @@ services:
     build: ./redis
     ports:
       - 6379:6379
+    volumes: 
+      - /etc/localtime:/etc/localtime:ro
   tscp-tomcat-8030:
     container_name: tscp-tomcat-8030
     labels:
@@ -26,6 +30,8 @@ services:
     build: ./tomcat
     ports:
       - 8030:8080
+    volumes: 
+      - /etc/localtime:/etc/localtime:ro
     environment:
       - JAVA_OPTS=-Xms200m -Xmx200m -DeurekaIp=http://tscp-tomcat-8030:8080/cloud-eureka/eureka/ -Dserver.port=8080
   tscp-tomcat-8020:
@@ -36,6 +42,8 @@ services:
     build: ./tomcat
     ports:
       - 8020:8080
+    volumes: 
+      - /etc/localtime:/etc/localtime:ro
     environment:
       - JAVA_OPTS=-Xms200m -Xmx200m -DeurekaIp=http://tscp-tomcat-8030:8080/cloud-eureka/eureka/ -Dserver.port=8080
     depends_on:
@@ -48,6 +56,8 @@ services:
     build: ./tomcat
     ports:
       - 8040:8080
+    volumes: 
+      - /etc/localtime:/etc/localtime:ro
     environment:
       - JAVA_OPTS=-Xms2g -Xmx2g -DeurekaIp=http://tscp-tomcat-8030:8080/cloud-eureka/eureka/ -Dserver.port=8080 -DptId=zyccons
     depends_on:
