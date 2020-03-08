@@ -2,15 +2,27 @@ version: '2.1'
 
 services:
   master:
+    # 主节点 6000端口 host模式
+    container_name: sentinel_master
+    network_mode: "host"
     image: redis
-    command: --appendonly yes
+    command: --port 6000 --appendonly yes
   slave1:
+    # 从节点1 6001端口 host模式
+    container_name: sentinel_slave1
+    network_mode: "host"
     image: redis
-    command: --appendonly yes --slaveof master 6379
+    command: --port 6001 --appendonly yes --slaveof 192.168.177.128 6000
   slave2:
+    # 从节点 6002端口 host模式
+    container_name: sentinel_slave2
+    network_mode: "host"
     image: redis
     # 配置slave2为可写模式
-    command: --appendonly yes --slaveof master 6379
+    command: --port 6002 --appendonly yes --slaveof 192.168.177.128 6000
   sentinel:
+    # 哨兵节点
+    container_name: sentinel
+    network_mode: "host"
     image: redis/sentinel
     build: .
