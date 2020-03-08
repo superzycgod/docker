@@ -1,0 +1,51 @@
+version: '2.1'
+
+services:
+  master1:
+    network_mode: "host"
+    container_name: cluster_master1
+    image: redis/cluster_master_7000
+    build:
+      context: .
+      args:
+        - port=7000
+  master2:
+    network_mode: "host"
+    container_name: cluster_master2
+    image: redis/cluster_master_7002
+    build:
+      context: .
+      args:
+        - port=7002
+  master3:
+    network_mode: "host"
+    container_name: cluster_master3
+    image: redis/cluster_master_7004
+    build:
+      context: .
+      args:
+        - port=7004
+  slave1:
+    network_mode: "host"
+    container_name: cluster_slave1
+    image: redis/cluster_slave_7001
+    build:
+      context: .
+      args:
+        - port=7001
+  slave2:
+    network_mode: "host"
+    container_name: cluster_slave2
+    image: redis/cluster_slave_7003
+    build:
+      context: .
+      args:
+        - port=7003
+  slave3:
+    network_mode: "host"
+    container_name: cluster_slave3
+    image: redis/cluster_slave_7005
+    build:
+      context: .
+      args:
+        - port=7005

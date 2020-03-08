@@ -1,0 +1,16 @@
+version: '2.1'
+
+services:
+  master:
+    image: redis
+    command: --appendonly yes
+  slave1:
+    image: redis
+    command: --appendonly yes --slaveof master 6379
+  slave2:
+    image: redis
+    # 配置slave2为可写模式
+    command: --appendonly yes --slaveof master 6379
+  sentinel:
+    image: redis/sentinel
+    build: .
