@@ -57,7 +57,9 @@ sentinel parallel-syncs <master-group-name> 1
 
 ## 2. quorum和majority
 
+[Redis Sentinel机制与用法]: https://segmentfault.com/a/1190000002680804	"Sentinel的配置"
 [Redis的几个核心机制底层原理]: https://segmentfault.com/a/1190000020849841?utm_source=tag-newest	"quorum和majority"
+
 
 1. 每次一个哨兵要做主备切换，首先需要quorum数量的哨兵认为O_DOWN，然后选举出一个哨兵来做切换，这个哨兵还得得到majority哨兵的授权，才能正式执行切换
 
