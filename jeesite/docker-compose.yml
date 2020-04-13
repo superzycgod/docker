@@ -1,0 +1,16 @@
+version: '2.1'
+
+services:
+  jeesite-mysql:
+    container_name: jeesite-mysql
+    image: jeesite-mysql:0.0.1
+    build: ./mysql
+    ports:
+      - 3306:3306
+    volumes: 
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=jeesite
+      - MYSQL_USER=jeesite
+      - MYSQL_PASSWORD=jeesite
